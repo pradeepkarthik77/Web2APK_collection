@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Files</title>
+    <style>
+        body {
+            background-color: #0d1117; /* GitHub dark mode background color */
+            color: #c9d1d9; /* GitHub dark mode text color */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #58a6ff; /* GitHub blue color for headers */
+            text-align: center;
+        }
+
+        #myInput {
+            background-color: #161b22; /* GitHub dark mode input background color */
+            color: #c9d1d9; /* GitHub dark mode text color */
+            width: 71%;
+            font-size: 16px;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #21262d; /* GitHub dark mode input border color */
+            margin: 0 auto 12px;
+            display: block;
+        }
+
+        #myTable {
+            border-collapse: collapse;
+            width: 75%;
+            margin: 0 auto;
+            border: 1px solid #21262d; /* GitHub dark mode table border color */
+            font-size: 18px;
+        }
+
+        #myTable th, #myTable td {
+            text-align: left;
+            padding: 12px;
+        }
+
+        #myTable tr {
+            border-bottom: 1px solid #21262d;
+        }
+
+        #myTable tr.header, #myTable tr:hover {
+            background-color: #161b22; /* GitHub dark mode table header and hover background color */
+        }
+
+        a {
+            color: #58a6ff; /* GitHub blue color for links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web2APK App Collection</h1>
+
+    <p style="text-align: center;">These Apps are generated and uploaded using the Web2APK Mobile Application and all the collection of these apps can be accessed <a href="https://github.com/pradeepkarthik77/Web2APK_collection">HERE.</a></p>
+
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for APKs..">
+
+    <table id="myTable">
+        <tr class="header">
+            <th style="width:60%;">Name</th>
+            <th style="width:40%;">Access Link</th>
+        </tr>
+
+    </table>
+
+    <script>
+        const repoOwner = 'pradeepkarthik77';
+        const repoName = 'Web2APK_collection';
+        const path = ''; 
+
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`)
+            .then(response => response.json())
+            .then(data => {
+                const apkList = document.getElementById('myTable');
+
+                data.forEach(file => {
+                    if (file.type === 'file' && file.name.endsWith('.apk')) {
+                        const row = apkList.insertRow(-1);
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+
+                        const downloadLink = document.createElement('a');
+                        
+                        downloadLink.href = `https://github.com/${repoOwner}/${repoName}/blob/main/${file.path}`;
+
+                        const fileNameWithoutExtension = file.name.replace(/\.apk$/, '');
+                        
+                        downloadLink.textContent = fileNameWithoutExtension;
+
+                        cell1.textContent = fileNameWithoutExtension;
+                        cell2.appendChild(downloadLink);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching file information:', error));
+
+        function myFunction() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
